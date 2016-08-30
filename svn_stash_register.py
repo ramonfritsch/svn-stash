@@ -61,7 +61,7 @@ class svn_stash_register:
    				f.writelines(content)
    				f.close()
 		except IOError as e:
-   			print 'registerFile cannot be created.'  
+   			print 'registerFile cannot be created.'
 
    	def obtain_last_stash(self):
    		length = len(self.stashes)
@@ -104,7 +104,7 @@ class svn_stash:
 		else:
 			randkey = random.getrandbits(128) #unique identifier
 			self.files[target_file] = randkey
-			result = os.popen("svn diff " + target_file + " > " + SVN_STASH_DIR + "/" + str(randkey) + ".stash.patch").read()
+			result = os.popen("svn --diff-cmd diff diff " + target_file + " > " + SVN_STASH_DIR + "/" + str(randkey) + ".stash.patch").read()
 			result += os.popen("svn revert " + target_file).read()
 			#print "push " + target_file
 
@@ -139,8 +139,8 @@ class svn_stash:
    	def clear(self):
    		result = ""
 		if os.path.exists(SVN_STASH_DIR):
-			for target_file in self.files:  
-				randkey = self.files[target_file] 		
+			for target_file in self.files:
+				randkey = self.files[target_file]
    				result += os.popen("rm " + SVN_STASH_DIR + "/" + str(randkey) + ".stash.patch").read()
    			result += os.popen("rm " + SVN_STASH_DIR + "/" + str(self.key)).read()
 
@@ -173,7 +173,7 @@ class svn_stash:
    		for filename in self.files:
    			try:
    				real_dir =  filename + ".stash.patch"
-				current_dir = SVN_STASH_DIR + "/" + self.files[filename] + ".stash.patch"	
+				current_dir = SVN_STASH_DIR + "/" + self.files[filename] + ".stash.patch"
 				content += print_hr()
 				content += "file " + real_dir
 				content += print_hr()
@@ -210,6 +210,6 @@ def is_a_current_stash(stash_id):
 	stash_dir_parts = stash.root_url.split("/")
 	stash_dir_parts = stash_dir_parts[:len(current_dir_parts)]
 	stash_dir = "/".join(stash_dir_parts)
-	if ".svn" in os.listdir(CURRENT_DIR):	
+	if ".svn" in os.listdir(CURRENT_DIR):
 		return stash_dir == CURRENT_DIR
 	return False
